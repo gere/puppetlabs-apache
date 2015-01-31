@@ -52,7 +52,7 @@
 
 ##Overview
 
-The apache module allows you to set up virtual hosts and manage web services with minimal effort. This fork adds support for a FastCGI Server that uses a [socket](#-socket-) instead of TCP. Currently it's a feature tested only on a Ubuntu Vagrant box. 
+The apache module allows you to set up virtual hosts and manage web services with minimal effort. This fork adds support for a FastCGI Server that uses a [socket](#socket) instead of TCP. Currently it's a feature tested only on a Ubuntu Vagrant box. 
 
 ##Module Description
 
