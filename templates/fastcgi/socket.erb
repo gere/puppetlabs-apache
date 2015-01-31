@@ -1,0 +1,2 @@
+FastCGIExternalServer <%= @faux_path %> -idle-timeout <%= @timeout %> <%= if @flush then '-flush' end %> -socket <%= @socket %> -pass-header Authorization
+<%= scope.function_template(['apache/fastcgi/server.erb']) %>

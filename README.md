@@ -1,6 +1,5 @@
 #apache
 
-[![Build Status](https://travis-ci.org/puppetlabs/puppetlabs-apache.png?branch=master)](https://travis-ci.org/puppetlabs/puppetlabs-apache)
 
 ####Table of Contents
 
@@ -53,7 +52,7 @@
 
 ##Overview
 
-The apache module allows you to set up virtual hosts and manage web services with minimal effort.
+The apache module allows you to set up virtual hosts and manage web services with minimal effort. This fork adds support for a FastCGI Server that uses a [socket](#-socket-) instead of TCP. Currently it's a feature tested only on a Ubuntu Vagrant box. 
 
 ##Module Description
 
@@ -2102,6 +2101,24 @@ apache::vhost { 'www':
 #####`host`
 
 The hostname or IP address and TCP port number (1-65535) of the FastCGI server.
+
+#####`socket`
+
+Name of the socket of the FastCGI server. To use instead of a hostname.
+
+Ex:
+
+```puppet
+apache::fastcgi::server { 'php':
+  socket     => '/var/run/php5-fpm.sock',
+  timeout    => 15,
+  flush      => false,
+  faux_path  => '/usr/lib/cgi-bin/php5-fcgi',
+  fcgi_alias => '/php5-fcgi',
+  file_type  => 'application/x-httpd-fastphp5'
+}
+```
+
 
 #####`timeout`
 
