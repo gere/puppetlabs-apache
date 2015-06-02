@@ -14,9 +14,10 @@ describe 'apache::mod::ssl', :type => :class do
         :id                     => 'root',
         :kernel                 => 'Linux',
         :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        :is_pe                  => false,
       }
     end
-    it { expect { subject }.to raise_error(Puppet::Error, /Unsupported osfamily:/) }
+    it { expect { catalogue }.to raise_error(Puppet::Error, /Unsupported osfamily:/) }
   end
 
   context 'on a RedHat OS' do
@@ -29,6 +30,7 @@ describe 'apache::mod::ssl', :type => :class do
         :id                     => 'root',
         :kernel                 => 'Linux',
         :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        :is_pe                  => false,
       }
     end
     it { is_expected.to contain_class('apache::params') }
@@ -56,6 +58,7 @@ describe 'apache::mod::ssl', :type => :class do
         :id                     => 'root',
         :kernel                 => 'Linux',
         :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        :is_pe                  => false,
       }
     end
     it { is_expected.to contain_class('apache::params') }
@@ -73,6 +76,24 @@ describe 'apache::mod::ssl', :type => :class do
         :id                     => 'root',
         :kernel                 => 'FreeBSD',
         :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        :is_pe                  => false,
+      }
+    end
+    it { is_expected.to contain_class('apache::params') }
+    it { is_expected.to contain_apache__mod('ssl') }
+  end
+
+  context 'on a Gentoo OS' do
+    let :facts do
+      {
+        :osfamily               => 'Gentoo',
+        :operatingsystem        => 'Gentoo',
+        :operatingsystemrelease => '3.16.1-gentoo',
+        :concat_basedir         => '/dne',
+        :id                     => 'root',
+        :kernel                 => 'Linux',
+        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin',
+        :is_pe                  => false,
       }
     end
     it { is_expected.to contain_class('apache::params') }
@@ -90,6 +111,7 @@ describe 'apache::mod::ssl', :type => :class do
         :id                     => 'root',
         :concat_basedir         => '/dne',
         :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        :is_pe                  => false,
       }
     end
 
@@ -106,5 +128,13 @@ describe 'apache::mod::ssl', :type => :class do
       it { is_expected.to contain_file('ssl.conf').with_content(/^  SSLPassPhraseDialog exec:\/path\/to\/program$/)}
     end
 
+    context 'setting ssl_random_seed_bytes' do
+      let :params do
+        {
+          :ssl_random_seed_bytes => '1024',
+        }
+      end
+      it { is_expected.to contain_file('ssl.conf').with_content(%r{^  SSLRandomSeed startup file:/dev/urandom 1024$})}
+    end
   end
 end
